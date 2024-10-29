@@ -11,7 +11,7 @@ export class ClientService {
     ){}
 
     async getClientById(clientId: string):Promise<Client> {
-        const token = await this.cacheManager.get(`token: ${clientId}`);
+        const token = await this.cacheManager.get(`token:${clientId}`);
 
         if(!token) {
             console.log('token not found');
@@ -20,7 +20,7 @@ export class ClientService {
 
         const config = {
             method: 'GET', 
-            url: `http://192.168.100.5:5050/client/${clientId}`,
+            url: `http://localhost:5050/client/${clientId}`,
             headers: {
                 Authorization: `Bearer ${token}`
             },

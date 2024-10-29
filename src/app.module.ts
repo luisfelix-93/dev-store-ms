@@ -5,8 +5,9 @@ import { ClientModule } from './client/client.module';
 import { ProductModule } from './product/product.module';
 import { CacheModule } from '@nestjs/cache-manager';
 import { MongooseModule } from '@nestjs/mongoose';
-import { ClientsModule, Transport } from '@nestjs/microservices';
+
 import { AuthModule } from './auth/auth.module';
+import { PaymentModule } from './payment/payment.module';
 
 @Module({
   imports: [
@@ -16,23 +17,10 @@ import { AuthModule } from './auth/auth.module';
       max:100,
       isGlobal: true
     }),
-    ClientsModule.register([
-      {
-        name:'PRODUCT_SERVICE',
-        transport: Transport.RMQ,
-        options: {
-          urls: ['amqp://localhost:5672'],
-          queue: 'product_queue',
-          queueOptions: {
-              durable: false
-          }
-        }
-      }
-    ]),
     MongooseModule.forRoot(process.env.MONGODB_URI),
     BucketModule, 
     ClientModule, 
-    ProductModule, AuthModule
+    ProductModule, AuthModule, PaymentModule
   ],
 
 })

@@ -11,7 +11,7 @@ export class JwtAuthGuard implements CanActivate {
     ){}
     async canActivate(context: ExecutionContext):Promise<boolean> {
         const request = context.switchToHttp().getRequest();
-        const authHeader = request.headers['authorization'];
+        const authHeader = request. headers['authorization'];
 
         if (!authHeader) {
             return false;
@@ -21,9 +21,10 @@ export class JwtAuthGuard implements CanActivate {
 
         try {
             const decodedToken = this.jwtService.verify(token);
-            const clientId = decodedToken.cleintId;
+            const clientId = decodedToken.clientId;
 
-            await this.cacheManager.set(`token: ${clientId}`, token, 1800*1000);
+            await this.cacheManager.set(`token:${clientId}`, token, 1800*1000);
+            console.log(`token:${clientId}`, token);
 
             return true;
         } catch (error) {
