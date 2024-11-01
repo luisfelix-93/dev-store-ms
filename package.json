@@ -33,6 +33,7 @@
     "amqplib": "^0.10.4",
     "axios": "^1.7.7",
     "cache-manager": "^5.7.6",
+    "class-validator": "^0.14.1",
     "dotenv": "^16.4.5",
     "mongoose": "^8.7.2",
     "passport": "^0.7.0",

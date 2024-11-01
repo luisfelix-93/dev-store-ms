@@ -9,14 +9,13 @@ export class BucketController {
     @Get('client/:clientId/product/:productId')
     @UseGuards(JwtAuthGuard)
     async insertProductBucket(@Param('clientId') clientId: string, @Param('productId') productId: string){
-        console.log(typeof(productId))
         return await this.bucketService.addProduct(clientId, productId);
     }
 
 
     @Get('client/:clientId')
     @UseGuards(JwtAuthGuard)
-    async getBucketList(@Param(':clientId') clientId: string) {
+    async getBucketList(@Param('clientId') clientId: string) {
         return await this.bucketService.getBucket(clientId);
     }
 
@@ -25,4 +24,8 @@ export class BucketController {
     async clearBucketList(@Param('clientId') clientId: string) {
         return await this.bucketService.clearBucket(clientId);
     }
+
+    // @Delete('client/:clientId/product/:productId')
+    // @UseGuards(JwtAuthGuard)
+    // async removeProductFromBucket(@Param('clientId') clientId: string, @Param('productId') productId: string){}
 }

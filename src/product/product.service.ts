@@ -4,6 +4,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import axios from 'axios';
 import { Cache } from 'cache-manager';
 import { Product } from './schemas/product.schema';
+import * as dotenv from 'dotenv'
+dotenv.config();
 
 @Injectable()
 export class ProductService {
@@ -23,7 +25,7 @@ export class ProductService {
         console.log(typeof(productId))
         const config = {
             method: 'GET',
-           url: `http://localhost:3000/product/${productId}`,
+            url: `${process.env.PRODUCT_URL}/${productId}`,
             headers: {
                 'Authorization': `Bearer ${token}`
             }
