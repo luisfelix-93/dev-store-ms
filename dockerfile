@@ -28,8 +28,6 @@ COPY --from=builder /usr/src/app/node_modules ./node_modules
 # Copiar o código compilado do estágio de build
 COPY --from=builder /usr/src/app/dist ./dist
 
-# Copy the .env file, if necessary (optional)
-COPY .env .env
 
 # Expose the port the service will run on
 EXPOSE 6000 
