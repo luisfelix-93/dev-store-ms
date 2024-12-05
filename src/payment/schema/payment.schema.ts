@@ -1,7 +1,9 @@
 import { Prop, Schema, SchemaFactory } from "@nestjs/mongoose";
 import { Document } from "mongoose";
 import { Bucket } from "src/bucket/schemas/bucket.schema";
-
+/**
+ * Define o schema para o documento `Payment` no MongoDB, que representa as informações de pagamento de uma compra específica.
+ */
 export type PaymentDocument = Payment & Document;
 @Schema()
 export class Payment {

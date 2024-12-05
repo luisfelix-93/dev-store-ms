@@ -1,0 +1,8 @@
+{
+    "entryPoints": ["src/main.ts"], // Ponto de entrada principal do seu projeto
+    "out": "docs", // Pasta onde a documentação será gerada
+    "includeVersion": true,
+    "excludePrivate": true, // Excluir membros privados
+    "excludeProtected": true, // Excluir membros protegidos
+}
+  

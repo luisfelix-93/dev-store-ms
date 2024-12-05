@@ -6,12 +6,29 @@ import axios from 'axios';
 import * as dotenv from 'dotenv';
 dotenv.config();
 
+/**
+ * Serviço que gerencia operações relacionadas ao cliente, incluindo a obtenção de informações
+ * de cliente por meio de uma requisição HTTP a uma API externa.
+ */
 @Injectable()
 export class ClientService {
+
+    /**
+     * Construtor que injeta o gerenciador de cache.
+     * 
+     * @param {Cache} cacheManager - Gerenciador de cache para armazenar e recuperar tokens de autenticação.
+     */
+
     constructor(
         @Inject(CACHE_MANAGER) private readonly cacheManager : Cache
     ){}
 
+    /**
+     * Obtém um cliente por ID, recuperando o token do cache e fazendo uma requisição à API externa.
+     * 
+     * @param {string} clientId - ID do cliente.
+     * @returns {Promise<Client>} O cliente com os dados recuperados ou `null` se o token não for encontrado.
+     */
     async getClientById(clientId: string):Promise<Client> {
         const token = await this.cacheManager.get(`token:${clientId}`);
 

@@ -4,6 +4,10 @@ import { PaymentController } from './payment.controller';
 import { MongooseModule } from '@nestjs/mongoose';
 import { Payment, PaymentSchema } from './schema/payment.schema';
 
+/**
+ * Módulo `PaymentModule` responsável por agrupar a lógica e o controlador para operações de pagamento.
+ * Importa os módulos `Mongoose` para ter acesso ao banco de dados do serviço.
+ */
 @Module({
   imports:[
     MongooseModule.forFeature([{ name: Payment.name, schema: PaymentSchema}])
