@@ -1,4 +1,4 @@
-import {  Controller, Delete, Get, Param, UseGuards } from '@nestjs/common';
+import {  Controller, Delete, Get, Param, Req, UseGuards } from '@nestjs/common';
 import { BucketService } from './bucket.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 
@@ -19,13 +19,15 @@ export class BucketController {
      * 
      * @param {string} clientId - ID do cliente.
      * @param {string} productId - ID do produto a ser adicionado ao bucket.
+     * @request {any} sessionId - ID da sessão iniciada. 
      * @returns {Promise<any>} Resultado da operação de adição de produto ao bucket.
      */
 
     @Get('client/:clientId/product/:productId')
     @UseGuards(JwtAuthGuard)
-    async insertProductBucket(@Param('clientId') clientId: string, @Param('productId') productId: string){
-        return await this.bucketService.addProduct(clientId, productId);
+    async insertProductBucket(@Param('clientId') clientId: string, @Param('productId') productId: string, @Req() request: any){
+        const sessionId = request.sessionId;
+        return await this.bucketService.addProduct(clientId, productId, sessionId);
     }
 
     /**

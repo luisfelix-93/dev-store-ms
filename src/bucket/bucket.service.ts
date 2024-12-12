@@ -29,10 +29,10 @@ export class BucketService {
      * @param {string} productId - ID do produto a ser adicionado.
      * @returns {Promise<Bucket>} O bucket atualizado contendo o novo produto e o preço total.
      */
-    async addProduct(clientId: string, productId: string):Promise<Bucket> {
+    async addProduct(clientId: string, productId: string, sessionId: string):Promise<Bucket> {
 
         const bucketKey = `bucket${clientId}`;
-        const client = await this.clientService.getClientById(clientId);
+        const client = await this.clientService.getClientById(clientId, sessionId);
 
         let bucket:Bucket = await this.cacheManager.get(bucketKey);
 
@@ -43,7 +43,7 @@ export class BucketService {
             bucket.totalPrice = 0;
         };
 
-        const product = await this.productService.findProductById(productId, clientId);
+        const product = await this.productService.findProductById(productId, sessionId);
 
         bucket.productList.push(product);
         bucket.totalPrice += product.price;

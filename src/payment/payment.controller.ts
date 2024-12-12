@@ -3,7 +3,7 @@ import { PaymentService } from './payment.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { InsertPaymentDTO } from './DTO/insertPayment.DTO';
 
-@Controller('payment')
+@Controller()
 export class PaymentController {
     /**
      * PaymentController: Expõe as rotas para o gerenciamento de pagamentos.
@@ -18,12 +18,17 @@ export class PaymentController {
     async buy(@Param('clientId') clientId: string, @Body() paymentDTO: InsertPaymentDTO){
         return await this.paymentService.insertPayment(clientId, paymentDTO)
     }
+    @Get('history')
+    @UseGuards(JwtAuthGuard)
+    async getHistory(){
+        return await this.paymentService.paymentHistory();
+    }
     /**
      * @Get('history/:clientId'): Rota para visualizar o histórico de pagamentos de um cliente específico.
      */
     @Get('history/:clientId')
     @UseGuards(JwtAuthGuard)
-    async getHistory(@Param('clientId') clientId: string) {
-        return await this.paymentService.paymentHistory(clientId)
+    async getHistoryByClient(@Param('clientId') clientId: string) {
+        return await this.paymentService.paymentHistoryByClient(clientId)
     }
 }

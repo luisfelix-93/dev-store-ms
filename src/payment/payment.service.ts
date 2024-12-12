@@ -63,12 +63,19 @@ export class PaymentService {
         return await newPayment.save();
     }
     /**
+     * Obtém todo o histórico de pagamentos da aplicação
+     * @returns {Promise<Payment[]|null>} - Lista de registro de pagamentos ou `{null}` caso não haja registro
+     */
+    async paymentHistory(): Promise<Payment[]|null>  {
+        return await this.paymentModel.find().exec();
+    }
+    /**
      * Obtém o histórico de pagamentos de um cliente específico.
      * 
      * @param {string} clientId - ID do cliente cujo histórico de pagamentos será recuperado.
      * @returns {Promise<Payment[]|null>} - Lista de registros de pagamentos ou `null` caso não haja registros.
      */
-    async paymentHistory(clientId):Promise<Payment[]|null> {
+    async paymentHistoryByClient(clientId):Promise<Payment[]|null> {
         return await this.paymentModel.find({clientId}).exec();
     }
     /**

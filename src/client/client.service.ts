@@ -29,8 +29,8 @@ export class ClientService {
      * @param {string} clientId - ID do cliente.
      * @returns {Promise<Client>} O cliente com os dados recuperados ou `null` se o token não for encontrado.
      */
-    async getClientById(clientId: string):Promise<Client> {
-        const token = await this.cacheManager.get(`token:${clientId}`);
+    async getClientById(clientId: string, sessionId: string):Promise<Client> {
+        const token = await this.cacheManager.get(`token:${sessionId}`);
 
         if(!token) {
             console.log('token not found');

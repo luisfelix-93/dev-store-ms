@@ -29,8 +29,8 @@ export class ProductService {
      * @returns {Promise<Product | null>} - Retorna o objeto `Product` com os dados do produto caso seja encontrado, ou `null` se o token não for encontrado.
      */
 
-    async findProductById(productId: string, clientId: string):Promise<Product|null> {
-        const token = await this.cacheManager.get(`token:${clientId}`);
+    async findProductById(productId: string, sessionId: string):Promise<Product|null> {
+        const token = await this.cacheManager.get(`token:${sessionId}`);
         if(!token) {
             console.log('Token not found!');
             return null
