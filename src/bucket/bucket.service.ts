@@ -43,7 +43,7 @@ export class BucketService {
             bucket.totalPrice = 0;
         };
 
-        const product = await this.productService.findProductById(productId, sessionId);
+        const product = await this.productService.findProductByQueueId(productId);
 
         bucket.productList.push(product);
         bucket.totalPrice += product.price;

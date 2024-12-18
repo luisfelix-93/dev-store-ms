@@ -3,7 +3,7 @@ import { PaymentService } from './payment.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { InsertPaymentDTO } from './DTO/insertPayment.DTO';
 
-@Controller()
+@Controller('payment')
 export class PaymentController {
     /**
      * PaymentController: Expõe as rotas para o gerenciamento de pagamentos.
