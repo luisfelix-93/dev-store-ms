@@ -28,7 +28,7 @@ export class ProductService {
                 urls: [process.env.RABBITMQ_URL],
                 queue: 'product_queue',
                 queueOptions: {
-                    durable: false
+                    durable: true
                 },
             },
         });
