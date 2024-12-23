@@ -98,6 +98,7 @@ export class PaymentService {
      * 
      * @param {InsertPaymentDTO} paymentDTO - Dados do pagamento a serem validados.
      * @returns {Promise<boolean>} - Retorna `true` se o pagamento for válido, caso contrário, `false`.
+     * Caso a API de mock não seja encontrada, retorna `true`.
      */
     private async paymentMock(paymentDTO : InsertPaymentDTO):Promise<boolean> {
         const paymentData = JSON.stringify({paymentDTO});
@@ -109,11 +110,23 @@ export class PaymentService {
             },
             body: paymentData
         };
-        const response = await axios.request(config);
-        if(!response.data.isValid) {
-            return false
+
+        try {
+            const response = await axios.request(config);
+            if(!response.data.isValid) {
+                return false
+            }
+            return true;
+        } catch (error) {
+            if(axios.isAxiosError(error) && error.response?.status === 404) {
+                console.warn('mock de API não encontrado')
+                return true;
+            }
+            console.error('Erro ao validar pagamento:', error.message);
+            return false;
         }
-        return true;
+        
+    
     }
     /**
      * Aplica uma máscara ao número do cartão de crédito, ocultando todos os dígitos, exceto os últimos 4.
