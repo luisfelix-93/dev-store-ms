@@ -8,6 +8,7 @@ import * as dotenv from 'dotenv';
 import axios from 'axios';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
+import { PaymentHistory } from './DTO/paymentHistory.DTO';
 dotenv.config();
 
 /**
@@ -77,6 +78,49 @@ export class PaymentService {
      */
     async paymentHistoryByClient(clientId):Promise<Payment[]|null> {
         return await this.paymentModel.find({clientId}).exec();
+    }
+    /**
+     * Obtém o histórico de pagamentos dentro de um intervalo de datas.
+     * @param {string} clientId - ID do cliente cujo histórico de pagamentos será recuperado.
+     * @param {Date} startDate - Data de início do intervalo.
+     * @param {Date} endDate - Data de término do intervalo.
+     * @param {number} limit - Limite de registros a serem retornados.
+     * @param {number} offset - Número de registros a serem ignorados.
+     * @returns {Promise<PaymentHistory[]|null>} - Lista de registros de pagamentos ou `null` caso não haja registros.
+     */
+    async paymentHistoryByDate(
+        clientId: string,
+        startDate: Date,
+        endDate: Date,
+        limit: number,
+        offset: number
+    ): Promise<PaymentHistory[] | null> {
+        const query: any = {
+            dateTransaction: {$gte: startDate, $lte: endDate},
+        };
+        if (clientId) {
+            query.clientId = clientId;
+        }
+        const payments = await this.paymentModel
+            .find(query)
+            .limit(limit)
+            .skip(offset)
+            .exec();
+
+        if (!payments) {
+            return null;
+        }
+
+        const paymentHistoryList: PaymentHistory[] = payments.map((payment) => {
+            const paymentHistory = new PaymentHistory();
+            paymentHistory.transactionId = payment._id.toString();
+            paymentHistory.dateTransaction = payment.dateTransaction;
+            paymentHistory.paymentType = payment.paymentType;
+            paymentHistory.productList = payment.productList;
+            return paymentHistory;
+        });
+
+        return paymentHistoryList;
     }
     /**
      * Recupera a lista de produtos no carrinho de um cliente armazenada no cache.

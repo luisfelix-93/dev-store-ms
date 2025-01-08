@@ -1,7 +1,8 @@
-import { Body, Controller, Get, Param, Post, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { InsertPaymentDTO } from './DTO/insertPayment.DTO';
+import { PaymentHistory } from './DTO/paymentHistory.DTO';
 
 @Controller('payment')
 export class PaymentController {
@@ -30,5 +31,31 @@ export class PaymentController {
     @UseGuards(JwtAuthGuard)
     async getHistoryByClient(@Param('clientId') clientId: string) {
         return await this.paymentService.paymentHistoryByClient(clientId)
+    }
+    /**
+     * GET /payment/history-by-date/:clientId
+     * @param clientId 
+     * @param start_date 
+     * @param end_date 
+     * @param limit 
+     * @param offset 
+     * @returns {Promise<PaymentHistory[]>}
+     */
+    @Get('history-by-date/:clientId')
+    @UseGuards(JwtAuthGuard)
+    async getHistoryByDate(
+        @Param('clientId') clientId: string,
+        @Query('start_date') start_date: string,
+        @Query('end_date') end_date: string,
+        @Query('limit') limit: string,
+        @Query('offset') offset: string
+    ): Promise<PaymentHistory[]> {
+        return await this.paymentService.paymentHistoryByDate(
+            clientId, 
+            new Date(start_date), 
+            new Date (end_date), 
+            parseInt(limit, 10), 
+            parseInt(offset, 10)
+        );
     }
 }
