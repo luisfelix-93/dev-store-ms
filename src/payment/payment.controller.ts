@@ -1,8 +1,11 @@
-import { Body, Controller, Get, Param, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Headers, Param, Post, Query, Req, UseGuards } from '@nestjs/common';
 import { PaymentService } from './payment.service';
 import { JwtAuthGuard } from 'src/auth/auth.guard';
 import { InsertPaymentDTO } from './DTO/insertPayment.DTO';
 import { PaymentHistory } from './DTO/paymentHistory.DTO';
+import { ClientService } from 'src/client/client.service';
+import { WebhookService } from 'src/webhook/webhook.service';
+import { Payment } from './schema/payment.schema';
 
 @Controller('payment')
 export class PaymentController {
@@ -10,15 +13,42 @@ export class PaymentController {
      * PaymentController: Expõe as rotas para o gerenciamento de pagamentos.
      * @param paymentService - Injeção do serviço de pagamentos
      */
-    constructor(private readonly paymentService: PaymentService) {}
+    constructor(
+        private readonly paymentService: PaymentService,
+        private readonly clientService: ClientService,
+        private readonly webhookService: WebhookService
+    ) {}
     /**
-     * @Post('buy/:clientId'): Rota para realizar a compra, usando insertPayment para criar um registro de pagamento.
+     * `POST /buy`
+     * @param clientId 
+     * @param clientIp 
+     * @param paymentDTO 
+     * @param req 
+     * @returns 
      */
     @Post('buy/:clientId')
     @UseGuards(JwtAuthGuard)
-    async buy(@Param('clientId') clientId: string, @Body() paymentDTO: InsertPaymentDTO){
-        return await this.paymentService.insertPayment(clientId, paymentDTO)
+    async buy(
+        @Param('clientId') clientId: string,
+        @Headers('x-client-ip') clientIp: string,
+        @Body() paymentDTO: InsertPaymentDTO,
+        @Req() req: any
+    ): Promise<Payment> {
+        const sessionId = req.sessionId;
+        const payment = await this.paymentService.insertPayment(clientId, paymentDTO);
+
+        if (payment) {
+            const totalPrice = payment.productList.totalPrice.toString();
+            const client = await this.clientService.getClientById(clientId, sessionId);
+            await this.webhookService.sendPaymentNotification(client.email, clientIp, totalPrice);
+        }
+
+        return payment;
     }
+    /**
+     * @Get('history/:clientId'): Rota para buscar a história de pagamentos de um cliente.
+     * 
+     */
     @Get('history')
     @UseGuards(JwtAuthGuard)
     async getHistory(){

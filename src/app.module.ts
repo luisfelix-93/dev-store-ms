@@ -8,6 +8,7 @@ import { MongooseModule } from '@nestjs/mongoose';
 
 import { AuthModule } from './auth/auth.module';
 import { PaymentModule } from './payment/payment.module';
+import { WebhookModule } from './webhook/webhook.module';
 /**
  * Módulo principal da aplicação, responsável pela configuração global dos módulos e integração de recursos
  * como o cache, variáveis de ambiente e a conexão com o banco de dados MongoDB.
@@ -23,7 +24,7 @@ import { PaymentModule } from './payment/payment.module';
     MongooseModule.forRoot(process.env.MONGODB_URI),
     BucketModule, 
     ClientModule, 
-    ProductModule, AuthModule, PaymentModule
+    ProductModule, AuthModule, PaymentModule, WebhookModule
   ],
 
 })
