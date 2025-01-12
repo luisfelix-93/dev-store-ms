@@ -7,6 +7,8 @@ export class Client{
     /** Nome do cliente. */
     @Prop()
     client_name: string;
+    @Prop()
+    email: string;
     /** Código postal do cliente. */
     @Prop()
     zipCode: string;
